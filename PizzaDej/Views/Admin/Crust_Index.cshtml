@@ -1,0 +1,49 @@
+﻿@model IEnumerable<VM_Crust_List>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<h2>Bunde</h2>
+<br />
+<p>
+    @Html.ActionLink("Ny Crust", "Crust_Create", null, new { @class = "btn btn-primary" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IngredientCalculation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IngredientCalculation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td>
+            @Html.ActionLink("ret", "Crust_Edit", new { id=item.CrustId }) |
+            @Html.ActionLink("slet", "Crust_Delete", new { id=item.CrustId })
+        </td>
+    </tr>
+}
+</table>

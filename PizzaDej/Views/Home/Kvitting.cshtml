@@ -1,0 +1,61 @@
+﻿
+@model IEnumerable<Ordre>
+@{
+    ViewBag.Title = "Kvitting";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="well col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3">
+            @foreach (var order in Model)
+            {
+
+                <div class="row">
+                    <div class="text-center">
+                        <h1>kvittering</h1>
+                    </div>
+                    <br />
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <address>
+                            <strong>Fuld Navn</strong><br />
+                            <strong>Email address</strong><br />
+                            <strong>Telefon nummer</strong><br />
+                            <strong>Adresse</strong><br />
+                            <strong>By</strong><br />
+                            <strong>Post nummer</strong><br />
+                            <strong>Dato</strong>
+                        </address>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 text-right">
+                        <strong>@order.Name</strong><br />
+                        <strong>@order.Email</strong><br />
+                        <strong>@order.Phone</strong><br />
+                        <strong>@order.Address</strong><br />
+                        <strong>@order.City</strong><br />
+                        <strong>@order.Zipcode</strong><br />
+                        <strong>@order.DateNow</strong>
+                    </div>
+                </div>
+            
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ingredienser</th>
+                            <th>Id</th>
+                            <th>Pris</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-md-9"><em>@order.IngredientDescription</em></td>
+                            <td class="col-md-1" style="text-align: center">@order.OrdreId</td>
+                            <td class="col-md-1 text-center">@order.TotalPrice Kr.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/All.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-fixed-left navbar-minimal animate" role="navigation">
+        <div class="navbar-toggler animate">
+            <span class="menu-icon"></span>
+        </div>
+        <ul class="navbar-menu animate">
+            <li>
+                <a href="/admin/Crusts" class="animate">
+                    <span class="desc animate">Administration</span>
+                    <span class="glyphicon glyphicon-user"></span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-6 col-md-offset-4 col-md-4">
+                <img src="~/Content/Images/pizza.png" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="white-background">
+                <div class="container">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <script type="text/javascript">
+
+        $.validator.methods.range = function (value, element, param) {
+            var globalizedValue = value.replace(",", ".");
+            return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+        }
+        $.validator.methods.number = function (value, element) {
+            return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+        };
+
+    </script>
+    @RenderSection("scripts", false)
+    <script>
+        $(function () {
+            /* START OF DEMO JS - NOT NEEDED */
+            if (window.location == window.parent.location) {
+                $('#fullscreen').html('<span class="glyphicon glyphicon-resize-small"></span>');
+                $('#fullscreen').attr('href', 'http://bootsnipp.com/mouse0270/snippets/PbDb5');
+                $('#fullscreen').attr('title', 'Back To Bootsnipp');
+            }
+            $('#fullscreen').on('click', function (event) {
+                event.preventDefault();
+                window.parent.location = $('#fullscreen').attr('href');
+            });
+            $('#fullscreen').tooltip();
+            /* END DEMO OF JS */
+
+            $('.navbar-toggler').on('click', function (event) {
+                event.preventDefault();
+                $(this).closest('.navbar-minimal').toggleClass('open');
+            })
+        });
+    </script>
+</body>
+</html>

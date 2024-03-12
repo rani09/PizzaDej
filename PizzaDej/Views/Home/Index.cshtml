@@ -1,0 +1,200 @@
+﻿@model VM_View_Home_Index
+@{
+    ViewBag.Title = "DejPizza";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="cart">
+    <div class="pull-left">
+        <span class="crustName">Byg din egen pizza: </span>
+        <span class="ingredientDescription"></span>
+    </div>
+    <div class="pull-right" style="text-align:right">
+        <span class="totalPrice">0 kr.</span>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<br />
+<div class="col-md-12">
+    <div id="step1" class="col-md-2">
+        <label>Vælg Bund</label>
+        <select id="crusts" class="form-control" size="10">
+            @foreach (Crust itemCrust in Model.Crusts)
+            {
+                <option value="@itemCrust.CrustId">@itemCrust.Name</option>
+            }
+        </select>
+    </div>
+    <div id="step2" class="col-md-2">
+        <label>Vælg kød</label>
+        <select class="ingredients form-control" size="10" multiple="multiple">
+            @foreach (Ingredient itemingredient in Model.Ingredients.Where(i => i.IngredientTypeId == 1))
+            {
+                <option value="@itemingredient.IngredientId">@itemingredient.Name</option>
+            }
+        </select>
+    </div>
+    <div id="step3" class="col-md-2">
+        <label>Vælg Salat</label>
+        <select class="ingredients form-control" size="10" multiple="multiple">
+            @foreach (Ingredient itemingredient in Model.Ingredients.Where(i => i.IngredientTypeId == 2))
+            {
+                <option value="@itemingredient.IngredientId">@itemingredient.Name</option>
+            }
+        </select>
+    </div>
+    <div id="step4" class="col-md-2">
+        <label>Vælg Ost</label>
+        <select class="ingredients form-control" size="10" multiple="multiple">
+            @foreach (Ingredient itemingredient in Model.Ingredients.Where(i => i.IngredientTypeId == 3))
+            {
+                <option value="@itemingredient.IngredientId">@itemingredient.Name</option>
+            }
+        </select>
+    </div>
+    <div id="step5" class="col-md-2">
+        <label>Vælg Dressing</label>
+        <select class="ingredients form-control" size="10" multiple="multiple">
+            @foreach (Ingredient itemingredient in Model.Ingredients.Where(i => i.IngredientTypeId == 4))
+            {
+                <option value="@itemingredient.IngredientId">@itemingredient.Name</option>
+            }
+        </select>
+    </div>
+</div>
+<br />
+<div id="carts">
+    <div class="pull-left">
+        <span>Oplysninger</span>
+    </div>
+    <div style="margin-left: 580px">Din bestilling</div>
+    <div class="clearfix"></div>
+</div>
+<br />
+<div class="col-md-12">
+    <form id="create-order">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Navn</label>
+                <input type="text" class="form-control" name="name" id="exampleInputEmail1" placeholder="Navn">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Email</label>
+                <input type="email" class="form-control" name="email" id="exampleInputPassword1" placeholder="E-mail">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Address</label>
+                <input type="text" class="form-control" name="address" id="exampleInputPassword1" placeholder="Address">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">By</label>
+                <input type="tel" class="form-control" name="city" id="exampleInputPassword1" placeholder="Hvor bor du?">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Post Nummer</label>
+                <input type="tel" class="form-control" name="zipcode" id="exampleInputPassword1" placeholder="post nummer">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Telefon Nummer</label>
+                <input type="tel" class="form-control" name="phone" id="exampleInputPassword1" placeholder="TLF">
+            </div>
+            <input id="sbt" type="submit" class="btn btn-default" value="Send order" />
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="exampleInputPassword1">Type</label>
+                <input type="text" class="form-control" id="crustName" name="crustName" placeholder="Type pizza" />
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Ingredienser</label>
+                <textarea style="height:100px" type="text" class="form-control" id="ingredientDescription" name="ingredientDescription" placeholder="ingredienser"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Pris</label>
+                <input type="text" class="form-control" id="totalPrice" name="totalPrice" placeholder="din pris er:" />
+            </div>
+        </div>
+    </form>
+</div>
+@section scripts
+    {
+    <script type="text/javascript">
+        var ingredients = [];
+
+        $("#crusts").change(function () {
+            var id = $(this).find('option:selected').val();
+            if (ingredients.length == 0) {
+                $.ajax({
+                    url: '/api/pizza/crusts',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=8',
+                    data: { id: id },
+                    success: function (data) {
+                        BuildBasket(data);
+                    }
+                });
+            }
+            else {
+                $('#step2 .ingredients').trigger('change');
+            }
+        });
+        $(".ingredients").change(function () {
+            var crustId = $('#crusts').find('option:selected').val();
+            ingredients = [];
+            $('.ingredients').find('option:selected').each(function (i, selected) {
+                ingredients[i] = $(selected).val();
+            });
+            console.log(ingredients);
+            $.ajax({
+                url: '/api/pizza/ingredients',
+                type: 'Get',
+                dataType: 'json',
+                contentType: 'application/json; charset=8',
+                data: { id: crustId, ingredient: ingredients },
+                success: function (data) {
+                    BuildBasket(data);
+                }
+            });
+        });
+        function BuildBasket(data) {
+            $('#crustName').val(data.CrustName);
+            $('#ingredientDescription').val(data.IngredientDescription);
+            $('#totalPrice').val(data.TotalPrice);
+            $('#step2').fadeIn(300);
+            $('.totalPrice').html(data.TotalPrice + 'kr.');
+            $('.crustName').html(data.CrustName);
+            if (ingredients.length > 0) {
+                $('.ingredientDescription').html(' - ' + data.IngredientDescription);
+            }
+            console.log(data);
+        }
+        $('#step1 .crusts').change(function () {
+            $('#step2 .ingredients').fadeIn();
+        });
+        $('#step2 .ingredients').change(function () {
+            $('#step3 .ingredients').fadeIn();
+        });
+        $('#step3 .ingredients').change(function () {
+            $('#step4 .ingredients').fadeIn();
+        });
+        $('#step4 .ingredients').change(function () {
+            $('#step5 .ingredients').fadeIn();
+        });
+
+        $('#sbt').click(function (e) {
+            e.preventDefault(); console.log(e);
+            $.ajax({
+                url: '/api/pizza/order',
+                type: 'POST',
+                dataType: 'json',
+                data: $('#create-order').serializeArray(),
+                success: function (data) {
+                    //alert('Din ordre er nu bestilt !');
+                    console.log(data);
+                    window.location.href = '/Home/Kvitting';
+                }
+            });
+        });
+    </script>
+}
+
